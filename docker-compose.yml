@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  wings:
+    build: .
+    container_name: pyro-wings
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./servers:/app/servers:rw
+      - ./logs:/app/logs:rw
+      - ./configs:/app/configs:rw
+      - ./backups:/app/backups:rw
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    networks:
+      - pyro-network
+    # Executar como root para gerenciar containers
+    user: "0:0"
+
+networks:
+  pyro-network:
+    driver: bridge
